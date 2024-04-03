@@ -47,7 +47,7 @@ const Navbar = ({ links }) => {
                 User
               </p>
               {optionsToggle && (
-                <ul className="absolute -right-1 z-20 w-48 space-y-2 rounded bg-white p-3 text-blue-500">
+                <ul className="absolute -right-1 top-10 z-20 w-48 space-y-2 rounded bg-white p-3 text-blue-500">
                   <li className="hover:underline">
                     <Link to={"/codes"}>Your Codeshares</Link>
                   </li>
