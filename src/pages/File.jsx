@@ -1,44 +1,56 @@
-import { useRef } from "react";
+/* eslint-disable no-unused-vars */
+import { useRef, useState } from "react";
 import Navbar from "../components/navbar/Navbar";
 import Editor from "@monaco-editor/react";
+import SideBar from "../components/sidebar/SideBar";
 
 const File = () => {
+  // const [output, setoutput] = useState("");
+  const [toggleSide, settoggleSide] = useState(false);
   const editorRef = useRef(null);
+
+  const handleSidebar = () => {
+    settoggleSide((prev) => !prev);
+  };
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
-    monaco.editor.defineTheme("myCustomTheme", {
-      base: "vs", // can also be 'hc-black'
-      inherit: true,
-      rules: [{ background: "EDF9FA" }],
-    });
-    monaco.editor.setTheme("myCustomTheme");
   }
-  function executeCode() {
-    const editor = editorRef.current;
-    const model = editor.getModel();
-    const code = model.getValue();
 
-    // Run the code using Monaco Editor's built-in functionality
-    try {
-      const result = new Function(code)();
-      console.log("Result:", result);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  }
+  // function showValue() {
+  //   if (editorRef.current) {
+  //     const editor = editorRef.current;
+  //     const code = editor.getValue();
+  //     try {
+  //       const originalConsoleLog = console.log;
+  //       const consoleOutputs = [];
+  //       console.log = (...args) => {
+  //         consoleOutputs.push(args.join(" "));
+  //         originalConsoleLog.apply(console, args);
+  //       };
+  //       const result = new Function(`return (function() { ${code} })()`)();
+
+  //       // Restore original console.log and update output state
+  //       setoutput(consoleOutputs.join("\n"));
+  //     } catch (error) {
+  //       setoutput(error.message, "hello");
+  //     }
+  //   }
+  // }
   return (
-    <div className="h-screen bg-gradient-to-b from-gray-800 from-30% to-blue-500 text-white">
+    <div className="bg-slate-700 text-white">
       <Navbar links={true} />
-      <div>
-        <button onClick={executeCode}>Run Code</button>
+      <div className="flex items-center justify-center gap-3">
         <Editor
-          height={"90vh"}
-          defaultLanguage="javascript"
+          height={"91vh"}
+          width={toggleSide ? "80vw" : "97vw"}
+          defaultLanguage="python"
           defaultValue="// write you'r code here"
-          theme="myCustomTheme"
-          editorDidMount={handleEditorDidMount}
+          theme="vs-dark"
+          onMount={handleEditorDidMount}
+          // onChange={handleChange}
         />
+        <SideBar toggleSide={toggleSide} onClick={handleSidebar} />
       </div>
     </div>
   );

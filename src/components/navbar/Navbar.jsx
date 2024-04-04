@@ -14,7 +14,7 @@ const Navbar = ({ links }) => {
   }
   return (
     <div
-      className={`flex items-center justify-between ${!links ? "bg-slate-700" : "bg-transparent"} px-8 py-6 text-white`}
+      className={`flex items-center justify-between ${!links ? "bg-slate-700" : "bg-transparent"} px-8 py-6 text-white `}
     >
       <Link to={"/"} className="inline-flex items-center justify-center gap-1">
         <SiCodesignal size={25} />
