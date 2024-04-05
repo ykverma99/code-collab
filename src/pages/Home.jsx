@@ -10,7 +10,7 @@ const Home = () => {
 
   const handleNavigate = () => {
     if (user) {
-      navigate("/file");
+      navigate("/codes");
     } else {
       navigate("/login");
     }

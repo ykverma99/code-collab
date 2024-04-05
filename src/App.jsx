@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import useUser from "./hooks/useUser";
 import File from "./pages/File";
+import Codes from "./pages/Codes";
 
 function App() {
   const { user } = useUser();
@@ -20,8 +21,12 @@ function App() {
           element={user ? <Navigate to={"/"} /> : <Signup />}
         />
         <Route
-          path="/file"
+          path="/file/:id"
           element={!user ? <Navigate to={"/login"} /> : <File />}
+        />
+        <Route
+          path="/codes"
+          element={!user ? <Navigate to={"/login"} /> : <Codes />}
         />
       </Routes>
     </BrowserRouter>

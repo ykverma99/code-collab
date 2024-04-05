@@ -3,8 +3,15 @@ import { RiMenuFoldLine, RiMenuUnfoldLine } from "react-icons/ri";
 import { FaDownload } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
 import { HiMiniPlay } from "react-icons/hi2";
+import { IoChatbubbles } from "react-icons/io5";
 
-const SideBar = ({ toggleSide, handleToggle, handleCodeRun, children }) => {
+const SideBar = ({
+  toggleSide,
+  handleToggle,
+  handleChat,
+  handleCodeRun,
+  children,
+}) => {
   return (
     <aside
       className={`h-[91vh] ${toggleSide ? "w-[20vw]" : "w-[3vw]"}  bg-gray-300 p-3`}
@@ -42,6 +49,14 @@ const SideBar = ({ toggleSide, handleToggle, handleCodeRun, children }) => {
               className={`absolute ${toggleSide ? "bg  top-6 bg-black bg-opacity-65" : "right-10 top-0 bg-white text-black"} hidden w-16 p-1 transition-all delay-200 duration-500 ease-in-out group-hover:block`}
             >
               Run Code
+            </small>
+          </div>
+          <div onClick={handleChat} className="group relative cursor-pointer">
+            <IoChatbubbles size={25} color="black" className="cursor-pointer" />
+            <small
+              className={`absolute ${toggleSide ? "bg  top-6 bg-black bg-opacity-65" : "right-10 top-0 bg-white text-black"} hidden  p-1 transition-all delay-200 duration-500 ease-in-out group-hover:block`}
+            >
+              Chat
             </small>
           </div>
         </div>

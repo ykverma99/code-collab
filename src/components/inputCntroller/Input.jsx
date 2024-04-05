@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // eslint-disable-next-line react/prop-types
-const Input = ({ id, label, type, onChange, value }) => {
+const Input = ({ id, label, type, onChange, value, onClick }) => {
   const [isFocus, setisFocus] = useState(false);
   return (
     <div
@@ -22,6 +22,7 @@ const Input = ({ id, label, type, onChange, value }) => {
         // placeholder="hello"
         id={id}
         onChange={onChange}
+        onClick={onClick}
       />
     </div>
   );
