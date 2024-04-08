@@ -109,6 +109,16 @@ const Codes = () => {
                   })}
               </tbody>
             </table>
+            {!data && (
+              <div className="flex w-full flex-col items-center justify-center gap-5">
+                <h3 className="text-3xl font-medium tracking-wide">
+                  No File, Create new File
+                </h3>
+                <Button onClick={() => settoggleModal(true)}>
+                  New Codeshare
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
