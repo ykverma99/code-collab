@@ -15,6 +15,7 @@ const File = () => {
   const [output, setoutput] = useState("");
   const [showCode, setshowCode] = useState(false);
   const [toggleSide, settoggleSide] = useState(false);
+  const [cursorPos, setcursorPos] = useState({});
   const editorRef = useRef(null);
   const { id } = useParams();
   const { user } = useUser();
@@ -36,9 +37,8 @@ const File = () => {
 
   useEffect(() => {
     socketClient.on("updateContentt", (content) => {
-      console.log(content, "from function");
+      setcode(content);
     });
-    console.log(code);
   }, [code, id]);
 
   useEffect(() => {
@@ -58,6 +58,13 @@ const File = () => {
       setcode(newContent);
     });
 
+    socket.on("cursorPosition", (userId, position) => {
+      setcursorPos((prevPositions) => ({
+        ...prevPositions,
+        [userId]: position,
+      }));
+    });
+
     if (socket.connected) {
       return () => {
         socket.disconnect();
@@ -69,6 +76,18 @@ const File = () => {
   const handleSidebar = () => {
     settoggleSide((prev) => !prev);
     setshowCode(false);
+  };
+
+  const handleCursorPositionChange = (position) => {
+    // Update local cursor position
+    setcursorPos(position);
+
+    // Emit cursor position to the server
+    socketClient.emit("cursorPosition", {
+      fileId: id,
+      userId: user._id,
+      position: position,
+    });
   };
 
   function handleEditorDidMount(editor, monaco) {
@@ -127,6 +146,7 @@ const File = () => {
           theme="vs-dark"
           onMount={handleEditorDidMount}
           onChange={handleCodeChange}
+          onCursorPositionChange={handleCursorPositionChange}
         />
         <SideBar
           toggleSide={toggleSide}
@@ -136,6 +156,20 @@ const File = () => {
         >
           {toggleSide && showCode && <OutputSection result={output} />}
           {/* {toggleSide && !showCode && <ChatSection fileId={id} />} */}
+          {Object.entries(cursorPos).map(([userId, position]) => (
+            <div
+              key={userId}
+              style={{
+                position: "absolute",
+                left: position.x,
+                top: position.y,
+                color: "red",
+                background: "red",
+              }}
+            >
+              {/* Cursor component */}
+            </div>
+          ))}
         </SideBar>
       </div>
     </div>
