@@ -9,12 +9,13 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import socketClient from "../context/SocketInstace";
 import useUser from "../hooks/useUser";
+import ChatSection from "../components/chatSection/ChatSection";
 
 const File = () => {
   const [code, setcode] = useState("");
   const [output, setoutput] = useState("");
   const [showCode, setshowCode] = useState(false);
-  const [toggleSide, settoggleSide] = useState(false);
+  const [toggleSide, settoggleSide] = useState(true);
   const [cursorPos, setcursorPos] = useState({});
   const editorRef = useRef(null);
   const { id } = useParams();
@@ -155,7 +156,7 @@ const File = () => {
           handleChat={handleChat}
         >
           {toggleSide && showCode && <OutputSection result={output} />}
-          {/* {toggleSide && !showCode && <ChatSection fileId={id} />} */}
+          {toggleSide && !showCode && <ChatSection id={id} />}
           {Object.entries(cursorPos).map(([userId, position]) => (
             <div
               key={userId}

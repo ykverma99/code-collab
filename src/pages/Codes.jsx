@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 import Button from "../components/buttons/Button";
-import Input from "../components/inputCntroller/Input";
 import Navbar from "../components/navbar/Navbar";
 import { MdDeleteForever } from "react-icons/md";
-import { RxCross2 } from "react-icons/rx";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useUser from "../hooks/useUser";
+import InputModal from "../components/InputModal";
+import { RxCross2 } from "react-icons/rx";
+import NewFile from "../assets/create_new.svg";
+import JoinRoom from "../assets/join_room_image.svg";
+import { toast } from "react-toastify";
 
 const Codes = () => {
   const [fileName, setfileName] = useState("");
   const [data, setdata] = useState(null);
+  const [fileType, setFileType] = useState("none");
   const [toggleModal, settoggleModal] = useState();
   const navigate = useNavigate();
   const { user } = useUser();
@@ -30,7 +34,7 @@ const Codes = () => {
       }
     };
     fetchData();
-  }, [user._id]);
+  }, [user._id, data]);
 
   const handleInput = (e) => {
     e.stopPropagation();
@@ -57,7 +61,20 @@ const Codes = () => {
       console.log(error);
     }
   };
-  console.log(data);
+
+  const deleteFile = async (id) => {
+    try {
+      const res = await axios.delete(
+        `${import.meta.env.VITE_PORT}/file/api/file/${id}`,
+        data,
+      );
+      if (res.status == 200) {
+        toast.success(res.data.msg);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="relative">
       <div>
@@ -102,6 +119,7 @@ const Codes = () => {
                             size={22}
                             color="gray"
                             className="cursor-pointer"
+                            onClick={() => deleteFile(elm._id)}
                           />
                         </td>
                       </tr>
@@ -128,24 +146,75 @@ const Codes = () => {
           onClick={() => settoggleModal(false)}
           className="fixed left-0 top-0 flex h-screen w-full items-center justify-center bg-black bg-opacity-30"
         >
-          <div className="w-[25vw] bg-white p-5">
+          <div className="h-[45vh] w-[40vw] space-y-10 bg-white p-5">
             <div className="flex justify-end">
               <RxCross2 size={25} className="cursor-pointer" />
             </div>
-            <div className="flex flex-col items-center justify-center gap-3">
-              <Input
-                label={"Enter File Name"}
-                id={"file"}
-                value={fileName}
-                onClick={handleInput}
-                onChange={(e) => setfileName(e.target.value)}
-              />
-              <div className="w-[20vw]">
-                <Button onClick={handleSubmit}>Submit</Button>
+            <div
+              onClick={handleInput}
+              className="flex items-center justify-center gap-8"
+            >
+              <div className=" space-y-3 border p-5 text-center shadow-lg shadow-gray-600">
+                <div>
+                  <img src={JoinRoom} alt="join_room" />
+                </div>
+                {/* <p className="text-3xl font-semibold text-blue-950">
+                  Join Room
+                </p> */}
+                <Button
+                  onClick={() => {
+                    setFileType("join");
+                    settoggleModal(false);
+                  }}
+                  className={"bg-blue-950"}
+                >
+                  Join Room
+                </Button>
+              </div>
+              <div className=" space-y-3 border p-5 text-center shadow-lg shadow-gray-600">
+                <div>
+                  <img src={NewFile} alt="new_file" />
+                </div>
+                {/* <p className="text-3xl font-semibold text-blue-950">
+                  Create New File
+                </p> */}
+                <Button
+                  onClick={() => {
+                    setFileType("new");
+                    settoggleModal(false);
+                  }}
+                >
+                  Create New File
+                </Button>
               </div>
             </div>
           </div>
         </div>
+      )}
+      {fileType == "new" ? (
+        <InputModal
+          fileName={fileName}
+          handleInput={handleInput}
+          onClick={() => {
+            setFileType("none");
+            setfileName("");
+          }}
+          onChange={(e) => setfileName(e.target.value)}
+          onSubmit={handleSubmit}
+        />
+      ) : fileType == "join" ? (
+        <InputModal
+          fileName={fileName}
+          handleInput={handleInput}
+          onClick={() => {
+            setFileType("none");
+            setfileName("");
+          }}
+          onChange={(e) => setfileName(e.target.value)}
+          onSubmit={() => navigate(fileName)}
+        />
+      ) : (
+        ""
       )}
     </div>
   );

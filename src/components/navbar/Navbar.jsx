@@ -1,17 +1,40 @@
 /* eslint-disable react/prop-types */
 import { SiCodesignal } from "react-icons/si";
 import { FaUsers } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "../buttons/Button";
 import { useState } from "react";
 import useUser from "../../hooks/useUser";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Navbar = ({ links }) => {
   const [optionsToggle, setoptionsToggle] = useState(false);
   const { logout, user } = useUser();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
   function toggleOptions() {
     setoptionsToggle((prev) => !prev);
   }
+
+  const copyButton = async () => {
+    try {
+      if (!navigator.clipboard) {
+        toast.error("Clipboard not supported");
+        throw new Error("Clipboard API not supported");
+      }
+      if (pathname.includes("file")) {
+        await navigator.clipboard.writeText(pathname);
+        // toast("Link Copied!");
+        toast.info("Link Copied!");
+      } else {
+        navigate("/codes");
+      }
+    } catch (error) {
+      console.log("Failed to copy", error);
+    }
+  };
   return (
     <div
       className={`flex items-center justify-between ${!links ? "bg-slate-700" : "bg-transparent"} px-8 py-6 text-white `}
@@ -36,6 +59,7 @@ const Navbar = ({ links }) => {
               size={"sm"}
               leftIcon={<FaUsers size={18} />}
               varient={"outline"}
+              onClick={copyButton}
             >
               Share
             </Button>
